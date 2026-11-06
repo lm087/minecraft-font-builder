@@ -6,6 +6,8 @@ Minecraft Font Builder turns the fonts of Minecraft (Java Edition) into TTF/OTF/
 
 This repository contains no game files. They are downloaded from Mojang, or read from your own copy of the game, when you run the tool.
 
+This tool contains AI-assisted code
+
 NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT
 
 ## Getting started

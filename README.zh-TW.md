@@ -6,6 +6,8 @@
 
 這裡不含任何遊戲檔案。執行時才會從 Mojang 下載，或讀取你自己電腦上的遊戲檔案。
 
+本工具有使用 AI 輔助程式碼
+
 NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT
 
 ## 開始使用
