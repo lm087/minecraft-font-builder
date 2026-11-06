@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#dcdcdc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+<title>Minecraft Font Builder</title>
+<link rel="icon" href="/static/mark.svg" type="image/svg+xml">
+<script src="/static/theme.js"></script>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/i18n.js" defer></script>
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="topLeft">
+    <span class="logo-box"><span class="logo" role="img" aria-label="Minecraft Font Builder"></span></span>
+    <h1 class="name">Minecraft Font Builder</h1>
+  </div>
+  <div class="topRight">
+    <button class="dropdownMenuToggle" type="button" id="langToggle" aria-expanded="false" aria-haspopup="menu" data-aria="language" data-title="languageHint"><svg class="icon-img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg></button>
+    <div class="dropdownMenu" id="langMenu"></div>
+  </div>
+</header>
+
+<main class="middle">
+  <article id="mainArticle">
+    <p data-t="lead"></p>
+
+    <!-- step 1: version -->
+    <h2 id="s-version"><span class="step">1</span><span data-t="versionTitle"></span></h2>
+    <hr class="subtle">
+    <p data-t="versionLead"></p>
+    <form id="f-version">
+      <fieldset>
+        <legend data-t="version"></legend>
+        <select id="version" data-aria="version"></select>
+        <label><input type="checkbox" id="snapshots"><span data-t="showSnapshots"></span></label>
+        <p class="hint" id="versions-error" hidden></p>
+      </fieldset>
+      <fieldset>
+        <legend data-t="localTitle"></legend>
+        <label><input type="checkbox" id="use-local"><span data-t="useLocal"></span></label>
+        <p class="check-hint" data-t="useLocalHint"></p>
+        <input type="text" id="game-path" data-aria="localPath" data-ph="localPathPlaceholder" spellcheck="false" autocomplete="off" hidden>
+      </fieldset>
+    </form>
+    <p class="status" id="game-status" aria-live="polite"></p>
+    <p class="hint" id="game-warnings" hidden></p>
+
+    <!-- step 2: fonts -->
+    <h2 id="s-fonts"><span class="step">2</span><span data-t="fontsTitle"></span></h2>
+    <hr class="subtle">
+    <p data-t="fontsLead"></p>
+    <form id="fonts"></form>
+    <p class="hint" id="fonts-missing" hidden></p>
+    <form><label><input type="checkbox" id="show-fragments"><span data-t="showFragments"></span></label></form>
+
+    <!-- step 3: files -->
+    <h2 id="s-files"><span class="step">3</span><span data-t="filesTitle"></span></h2>
+    <hr class="subtle">
+    <p data-t="filesLead"></p>
+    <form id="f-files">
+      <fieldset>
+        <legend data-t="outputFolder"></legend>
+        <input type="text" id="output" data-aria="outputFolder" spellcheck="false" autocomplete="off">
+        <p class="hint" id="output-full"></p>
+      </fieldset>
+      <fieldset id="styles">
+        <legend data-t="styles"></legend>
+      </fieldset>
+      <fieldset id="formats">
+        <legend data-t="formats"></legend>
+      </fieldset>
+    </form>
+
+    <!-- more settings -->
+    <h2 id="s-more" data-t="moreTitle"></h2>
+    <hr class="subtle">
+    <p data-t="moreLead"></p>
+
+    <details class="subtle" id="d-chars">
+      <summary><h2><span data-t="charsTitle"></span> <span class="tag" id="chars-note" hidden></span></h2></summary>
+      <form>
+        <p id="chars-lead"></p>
+        <div id="suggestions" hidden></div>
+        <fieldset id="planes-box">
+          <legend data-t="planes"></legend>
+          <div id="planes"></div>
+        </fieldset>
+        <fieldset>
+          <legend data-t="unassignedTitle"></legend>
+          <label><input type="checkbox" id="exclude-unassigned"><span data-t="excludeUnassigned"></span></label>
+          <p class="check-hint" data-t="excludeUnassignedHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="blocks"></legend>
+          <p class="hint" data-t="blocksHint"></p>
+          <div class="toolbar">
+            <select id="block-font" data-aria="blockFont"></select>
+            <input type="search" id="block-filter" class="grow" data-ph="filterBlocks" data-aria="filterBlocks" spellcheck="false" autocomplete="off">
+            <select id="block-view" data-aria="blockView"></select>
+          </div>
+          <div class="block-table" id="blocks"></div>
+        </fieldset>
+        <p class="hint" id="other-rules" hidden></p>
+        <div class="btn-row"><button type="button" id="reset-chars" data-t="resetChars"></button></div>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-look">
+      <summary><h2 data-t="lookTitle"></h2></summary>
+      <form>
+        <fieldset id="line-metrics">
+          <legend data-t="lineMetrics"></legend>
+        </fieldset>
+        <fieldset>
+          <legend data-t="size"></legend>
+          <select id="em-pixels" data-aria="size"></select>
+          <p class="hint" data-t="sizeHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="italicShift"></legend>
+          <select id="italic-shift" data-aria="italicShift"></select>
+          <p class="hint" data-t="italicShiftHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="centerTitle"></legend>
+          <label><input type="checkbox" id="center-glyphs"><span data-t="centerGlyphs"></span></label>
+          <p class="check-hint" data-t="centerGlyphsHint"></p>
+        </fieldset>
+        <fieldset id="shadow-box">
+          <legend data-t="shadow"></legend>
+          <label><input type="checkbox" id="shadow"><span data-t="shadowOn"></span></label>
+          <p class="check-hint" data-t="shadowHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-options">
+      <summary><h2 data-t="gameOptionsTitle"></h2></summary>
+      <form>
+        <p data-t="gameOptionsLead"></p>
+        <fieldset>
+          <legend data-t="gameOptionsTitle"></legend>
+          <label><input type="checkbox" id="force-unicode"><span data-t="forceUnicode"></span></label>
+          <p class="check-hint" data-t="forceUnicodeHint"></p>
+          <label><input type="checkbox" id="japanese"><span data-t="japanese"></span></label>
+          <p class="check-hint" data-t="japaneseHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-names">
+      <summary><h2 data-t="namesTitle"></h2></summary>
+      <form>
+        <p data-t="namesLead"></p>
+        <fieldset>
+          <legend data-t="familyNames"></legend>
+          <div class="name-list" id="names"></div>
+        </fieldset>
+        <fieldset>
+          <legend data-t="familySuffix"></legend>
+          <input type="text" id="family-suffix" data-aria="familySuffix" data-ph="familySuffixPlaceholder" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="familySuffixHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-meta">
+      <summary><h2 data-t="metaTitle"></h2></summary>
+      <form>
+        <p data-t="metaLead"></p>
+        <fieldset>
+          <legend data-t="fontVersion"></legend>
+          <select id="font_version-mode" data-aria="fontVersion"></select>
+          <input type="text" id="font_version-text" data-aria="fontVersion" placeholder="1.0" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="fontVersionHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="copyright"></legend>
+          <select id="copyright-mode" data-aria="copyright"></select>
+          <input type="text" id="copyright-text" data-aria="copyright" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="copyrightHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="license"></legend>
+          <label for="license-mode" data-t="licenseText"></label>
+          <select id="license-mode"></select>
+          <input type="text" id="license-text" data-aria="licenseText" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="licenseHint"></p>
+          <label for="license_url-mode" data-t="licenseUrl"></label>
+          <select id="license_url-mode"></select>
+          <input type="text" id="license_url-text" data-aria="licenseUrl" placeholder="https://" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="licenseUrlHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="designer"></legend>
+          <label for="designer" data-t="metaName"></label>
+          <input type="text" id="designer" data-meta="designer" spellcheck="false" autocomplete="off">
+          <label for="designer_url" data-t="metaUrl"></label>
+          <input type="text" id="designer_url" data-meta="designer_url" placeholder="https://" spellcheck="false" autocomplete="off">
+        </fieldset>
+        <fieldset>
+          <legend data-t="manufacturer"></legend>
+          <label for="manufacturer" data-t="metaName"></label>
+          <input type="text" id="manufacturer" data-meta="manufacturer" spellcheck="false" autocomplete="off">
+          <label for="manufacturer_url" data-t="metaUrl"></label>
+          <input type="text" id="manufacturer_url" data-meta="manufacturer_url" placeholder="https://" spellcheck="false" autocomplete="off">
+        </fieldset>
+        <fieldset>
+          <legend data-t="description"></legend>
+          <textarea id="description" data-meta="description" rows="3" data-aria="description"></textarea>
+          <p class="hint" data-t="descriptionHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-downloads">
+      <summary><h2 data-t="downloadsTitle"></h2></summary>
+      <form>
+        <fieldset>
+          <legend data-t="launcherDir"></legend>
+          <select id="launcher-mode" data-aria="launcherDir"></select>
+          <input type="text" id="launcher-path" data-aria="launcherDir" data-ph="launcherPathPlaceholder" spellcheck="false" autocomplete="off">
+          <p class="hint" id="launcher-hint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="cacheDir"></legend>
+          <input type="text" id="cache-dir" data-aria="cacheDir" data-ph="cacheDirPlaceholder" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="cacheDirHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="offline"></legend>
+          <label><input type="checkbox" id="offline"><span data-t="offlineOn"></span></label>
+          <p class="check-hint" data-t="offlineHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="resourcePacks"></legend>
+          <textarea id="resource-packs" rows="3" data-aria="resourcePacks" spellcheck="false"></textarea>
+          <p class="hint" data-t="resourcePacksHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-advanced">
+      <summary><h2 data-t="advancedTitle"></h2></summary>
+      <form>
+        <fieldset>
+          <legend data-t="embeddedBitmaps"></legend>
+          <input type="text" id="embedded-bitmaps" data-aria="embeddedBitmaps" placeholder="8, 16" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="embeddedBitmapsHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="renderProfile"></legend>
+          <select id="render-profile" data-aria="renderProfile"></select>
+          <p class="hint" data-t="renderProfileHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="jobs"></legend>
+          <input type="number" id="jobs" min="0" step="1" data-aria="jobs">
+          <p class="hint" data-t="jobsHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="buildDate"></legend>
+          <input type="text" id="build-date" placeholder="YYYY-MM-DD" data-aria="buildDate" spellcheck="false" autocomplete="off">
+          <p class="hint" data-t="buildDateHint"></p>
+        </fieldset>
+        <fieldset>
+          <legend data-t="unitsPerPixel"></legend>
+          <input type="number" id="units-per-pixel" min="2" step="1" data-aria="unitsPerPixel">
+          <p class="hint" data-t="unitsPerPixelHint"></p>
+        </fieldset>
+      </form>
+    </details>
+
+    <details class="subtle" id="d-file">
+      <summary><h2 data-t="settingsFileTitle"></h2></summary>
+      <form>
+        <p data-t="settingsFileLead"></p>
+        <div class="btn-row">
+          <button type="button" id="open-settings" data-t="openSettings"></button>
+          <button type="button" id="save-settings" data-t="saveSettings"></button>
+          <button type="button" id="reset-settings" data-t="resetSettings"></button>
+        </div>
+        <input type="file" id="settings-file" accept=".yaml,.yml,.json" hidden>
+      </form>
+    </details>
+
+    <!-- preview -->
+    <h2 id="s-preview" data-t="previewTitle"></h2>
+    <hr class="subtle">
+    <p id="preview-lead"></p>
+    <form id="preview-tools">
+      <div class="toolbar">
+        <input type="text" id="preview-text" class="grow" data-aria="previewText" spellcheck="false">
+        <select id="preview-size" data-aria="previewSize"></select>
+        <select id="preview-bg" data-aria="previewBg"></select>
+      </div>
+    </form>
+    <div class="preview" id="preview"></div>
+
+    <!-- build log -->
+    <h2 id="s-log" data-t="logTitle" hidden></h2>
+    <hr class="subtle" id="log-rule" hidden>
+    <pre class="log" id="log" hidden></pre>
+
+    <hr class="subtle">
+    <p class="disclaimer"><span data-t="disclaimer"></span> <span id="app-version"></span></p>
+  </article>
+</main>
+
+<footer class="bottom" id="bottom">
+  <div class="progress" id="progress" hidden><div></div></div>
+  <p id="footerNotes" aria-live="polite"></p>
+  <div class="bottom-actions">
+    <button type="button" class="btn" id="open-folder" data-t="openFolder" hidden></button>
+    <button type="button" class="btn btn-primary" id="build" data-t="build"></button>
+    <button class="themeToggle" type="button" id="themeToggle" data-aria="themeToggle" data-title="themeToggleHint">
+      <span id="themeToggleIcon" class="themeToggleIcon" aria-hidden="true">
+        <svg data-theme-icon="light" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" focusable="false"><path d="M12 19a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1m-4.95-2.05a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0m11.314 0l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 1.414-1.414m-5.049-9.836a5 5 0 1 1-2.532 9.674a5 5 0 0 1 2.532-9.674m-9.315 3.886a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm18 0a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2zm-16.364-6.778l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 1.414-1.414m14.142 0a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 0 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0m-7.778-3.222a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1" /></svg>
+        <svg data-theme-icon="dark" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" focusable="false"><path d="M12 1.992001C6.983455 1.992922 2.743941 5.710514 2.087755 10.683957C1.43157 15.657401 4.561813 20.347343 9.406455 21.649328C14.251097 22.951313 19.31065 20.462358 21.236 15.83C21.577 15.01 20.76 14.186 19.938 14.52C17.030928 15.697571 13.697583 14.631229 12.013743 11.98502C10.329903 9.33881 10.775901 5.867592 13.074 3.733L13.151 3.653C13.702 3.023001 13.264 2 12.393 2H12.127L12.059 1.993999L11.999 1.992001Z" /></svg>
+      </span>
+    </button>
+  </div>
+</footer>
+</body>
+</html>

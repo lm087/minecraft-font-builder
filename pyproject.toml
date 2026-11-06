@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minecraft-font-builder"
+version = "1.0.0"
+description = "Turn the fonts of Minecraft: Java Edition into fonts you can install"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE", "LICENSES/*"]
+dependencies = [
+  "fonttools>=4.47",
+  "brotli>=1.0",
+  "numpy>=1.24",
+  "Pillow>=9",
+  "PyYAML>=6",
+]
+
+[project.optional-dependencies]
+verify = ["opentype-sanitizer>=9"]
+fontbakery = ["fontbakery>=0.12"]
+test = ["pytest>=7", "opentype-sanitizer>=9"]
+
+[project.urls]
+Source = "https://github.com/lm087/minecraft-font-builder"
+
+[project.scripts]
+mcfont = "mcfont.cli:main"
+
+[tool.setuptools]
+packages = ["mcfont", "mcfont.gui", "mcfont.gui.static"]
+
+[tool.setuptools.package-data]
+"mcfont.gui.static" = ["*.html", "*.css", "*.js", "*.svg"]
